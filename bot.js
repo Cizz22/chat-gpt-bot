@@ -1,22 +1,16 @@
 require("dotenv").config();
-const Discord = require("discord.js");
+const {
+    Client,
+    GatewayIntentBits
+} = require("discord.js");
 const fs = require("fs");
-const photo = require("./lib/photo.js");
-const moment = require("moment");
-var cron = require("node-cron");
 
 // Create a Discord.Client() instance.
-const client = new Discord.Client();
-
-cron.schedule("0 0 * * * *", () => {
-    console.log(`It's time! Snapping a photo.`.yellow);
-    photo.takePhoto((err, data) => {
-        const date = Date.now();
-        const title = moment(date).format("dddd, MMMM Do YYYY, h:mm:ss a");
-        client.channels
-            .get("810238535994966057")
-            .send(`Photo snapped! ${title}`, { files: [data] });
-    });
+const client = new Client({
+	intents: [
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.GuildMessages,
+	],
 });
 
 // Load all commands into the client's commands object from the /commands/ folder.
